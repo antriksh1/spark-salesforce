@@ -14,7 +14,7 @@ resolvers += "sonatype-snapshots" at "https://oss.sonatype.org/content/repositor
 libraryDependencies ++= Seq(
   "com.force.api" % "force-wsc" % "52.2.0",
   "com.force.api" % "force-partner-api" % "52.2.0",
-  "com.springml" % "salesforce-wave-api" % "1.0.8-uber-2",
+  "com.springml" % "salesforce-wave-api" % "1.0.8-uber-3",
   "org.mockito" % "mockito-core" % "2.0.31-beta"
 )
 
@@ -30,7 +30,7 @@ resolvers += "sonatype-snapshots" at "https://oss.sonatype.org/content/repositor
 
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.3" % "test"
-libraryDependencies += "com.fasterxml.jackson.dataformat" % "jackson-dataformat-xml" % "2.4.4"
+libraryDependencies += "com.fasterxml.jackson.dataformat" % "jackson-dataformat-xml" % "2.13.4"
 libraryDependencies += "org.codehaus.woodstox" % "woodstox-core-asl" % "4.4.0"
 
 // Spark Package Details (sbt-spark-package)
@@ -38,7 +38,7 @@ spName := "springml/spark-salesforce"
 
 spAppendScalaVersion := true
 
-sparkVersion := "2.4.5"
+sparkVersion := "3.3.2"
 
 sparkComponents += "sql"
 
