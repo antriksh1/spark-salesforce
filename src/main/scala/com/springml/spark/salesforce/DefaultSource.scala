@@ -216,6 +216,8 @@ class DefaultSource extends RelationProvider with SchemaRelationProvider with Cr
       val chunkSize = parameters.get("chunkSize")
       logger.info("createBulkRelation :: chunkSize: " + chunkSize)
 
+      val parent = parameters.get("parent")
+
       if (!chunkSize.isEmpty) {
         try {
           chunkSize.get.toInt
@@ -223,10 +225,18 @@ class DefaultSource extends RelationProvider with SchemaRelationProvider with Cr
         catch {
           case e: Exception => throw new Exception("chunkSize must be a valid integer")
         }
-        customHeaders += new BasicHeader("Sforce-Enable-PKChunking", s"chunkSize=${chunkSize.get}")
-//        customHeaders += new BasicHeader("Sforce-Enable-PKChunking", s"chunkSize=${chunkSize.get}; parent=Account")
+
+        if(parent.isEmpty) {
+          customHeaders += new BasicHeader("Sforce-Enable-PKChunking", s"chunkSize=${chunkSize.get}")
+        } else {
+          customHeaders += new BasicHeader("Sforce-Enable-PKChunking", s"chunkSize=${chunkSize.get}; parent=${parent.get}")
+        }
       } else {
-        customHeaders += new BasicHeader("Sforce-Enable-PKChunking", "true")
+        if(parent.isEmpty) {
+          customHeaders += new BasicHeader("Sforce-Enable-PKChunking", "true")
+        } else {
+          customHeaders += new BasicHeader("Sforce-Enable-PKChunking", s"parent=${parent.get}")
+        }
       }
     }
 
