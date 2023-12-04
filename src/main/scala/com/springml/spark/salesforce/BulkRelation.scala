@@ -77,10 +77,22 @@ case class BulkRelation(
       logger.error(">>>>>> Obtained batchInfos.size: " + batchInfos.size)
 
       val completedBatchInfos = batchInfos.filter(batchInfo => batchInfo.getState().equals("Completed"))
-      val completedBatchInfoIds = completedBatchInfos.map(batchInfo => batchInfo.getId)
+      logger.error(">>> Obtained completedBatchInfos.size ALL : " + completedBatchInfos.size)
 
-      logger.error(">>> Obtained completedBatchInfoIds: " + completedBatchInfoIds)
-      logger.error(">>> Obtained completedBatchInfoIds.size: " + completedBatchInfoIds.size)
+      //val completedBatchInfoIds = completedBatchInfos.map(batchInfo => batchInfo.getId)
+      // AS ddition 12/04
+      val completedBatchInfoIds = completedBatchInfos
+        .filter(batchInfo =>  batchInfo.getNumberRecordsProcessed > 0)
+        .map(batchInfo => batchInfo.getId)
+
+      logger.error(">>> Obtained completedBatchInfoIds WITH RECORDS: " + completedBatchInfoIds)
+      logger.error(">>> Obtained completedBatchInfoIds.size WITH RECORDS: " + completedBatchInfoIds.size)
+
+      completedBatchInfos
+        .filter(batchInfo =>  batchInfo.getNumberRecordsProcessed > 0)
+        .foreach(batchInfo => {
+          logger.error(">>> Obtained completedBatchInfoId: " +  batchInfo.getId + ", WITH Records Processed: " + batchInfo.getNumberRecordsProcessed)
+        })
 
       def splitCsvByRows(csvString: String): Seq[String] = {
         // The CsvParser interface only interacts with IO, so StringReader and StringWriter
