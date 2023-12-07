@@ -99,6 +99,7 @@ case class BulkRelation(
         val inputReader = new StringReader(csvString)
 
         val parserSettings = new CsvParserSettings()
+        parserSettings.setMaxColumns(1024)
         parserSettings.setLineSeparatorDetectionEnabled(true)
         parserSettings.getFormat.setNormalizedNewline(' ')
         parserSettings.setMaxCharsPerColumn(maxCharsPerColumn)
@@ -117,7 +118,8 @@ case class BulkRelation(
           writer.writeRow(_)
         }
 
-        outputWriter.toString.lines.toList
+//        outputWriter.toString.lines.toList
+        outputWriter.toString.split("\\r?\\n").toList
       }
 
       val fetchAllResults = (resultId: String, batchInfoId: String) => {
