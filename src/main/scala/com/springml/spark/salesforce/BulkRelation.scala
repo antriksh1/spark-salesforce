@@ -55,6 +55,11 @@ case class BulkRelation(
 
   lazy val records: DataFrame = {
     val inputJobInfo = new JobInfo("CSV", sfObject, "queryAll")
+
+    if(bulkAPI == null) {
+      SerializableBulkAPIWrapper.initializeInstance(username, password, login, version)
+    }
+
     val jobInfo = bulkAPI.createJob(inputJobInfo, customHeaders.asJava)
     val jobId = jobInfo.getId
     logger.error(">>> Obtained jobId: " + jobId)
@@ -104,6 +109,9 @@ case class BulkRelation(
       }
 
       val fetchAllResults = (resultId: String, batchInfoId: String) => {
+        if(bulkAPI == null) {
+          SerializableBulkAPIWrapper.initializeInstance(username, password, login, version)
+        }
         logger.error("Getting Result for ResultId: " + resultId)
         val result = bulkAPI.getBatchResult(jobId, batchInfoId, resultId)
 
@@ -117,6 +125,10 @@ case class BulkRelation(
 
       val fetchBatchInfo = (batchInfoId: String) => {
         logger.error(">>> About to fetch Results in batchInfoId: " + batchInfoId)
+
+        if (bulkAPI == null) {
+          SerializableBulkAPIWrapper.initializeInstance(username, password, login, version)
+        }
 
         val resultIds = bulkAPI.getBatchResultIds(jobId, batchInfoId)
         logger.error(">>> Got ResultsIds in batchInfoId: " + resultIds)
@@ -231,7 +243,8 @@ case class BulkRelation(
 
   // Create new instance of BulkAPI every time because Spark workers cannot serialize the object
   private def bulkAPI(): BulkAPI = {
-    APIFactory.getInstance().bulkAPI(username, password, login, version)
+//    APIFactory.getInstance().bulkAPI(username, password, login, version
+    SerializableBulkAPIWrapper.getInstance
   }
 
   private def awaitJobCompleted(jobId: String): Boolean = {
