@@ -217,6 +217,7 @@ class DefaultSource extends RelationProvider with SchemaRelationProvider with Cr
       logger.info("createBulkRelation :: chunkSize: " + chunkSize)
 
       val parent = parameters.get("parent")
+      logger.info("createBulkRelation :: parent: " + parent)
 
       if (!chunkSize.isEmpty) {
         try {
@@ -240,6 +241,14 @@ class DefaultSource extends RelationProvider with SchemaRelationProvider with Cr
       }
     }
 
+    logger.info("createBulkRelation :: parameters: " + parameters)
+
+    logger.info("createBulkRelation :: multiQuery: " + parameters.get("multiQuery"))
+    logger.info("createBulkRelation :: splitMonthly: " + parameters.get("splitMonthly"))
+    logger.info("createBulkRelation :: splitWeekly: " + parameters.get("splitWeekly"))
+    logger.info("createBulkRelation :: splitDaily: " + parameters.get("splitDaily"))
+    logger.info("createBulkRelation :: splitHourlyToo: " + parameters.get("splitHourlyToo"))
+
     BulkRelation(
       username,
       password,
@@ -252,7 +261,8 @@ class DefaultSource extends RelationProvider with SchemaRelationProvider with Cr
       sqlContext,
       inferSchemaFlag,
       timeout,
-      maxCharsPerColumn
+      maxCharsPerColumn,
+      parameters
     )
   }
 
