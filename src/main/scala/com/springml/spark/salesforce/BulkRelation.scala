@@ -109,10 +109,12 @@ case class BulkRelation(
       }
 
       val fetchAllResults = (resultId: String, batchInfoId: String) => {
+        logger.error("About to Result for ResultId: " + resultId)
+
         if(bulkAPI == null) {
           SerializableBulkAPIWrapper.initializeInstance(username, password, login, version)
         }
-        logger.error("Getting Result for ResultId: " + resultId)
+
         val result = bulkAPI.getBatchResult(jobId, batchInfoId, resultId)
 
         val splitRows = splitCsvByRows(result)
